@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ajax与promise串联请求比较</title>
+    <script src="./lib/jquery.js"></script>
+    <script>
+        $(function() {
+            /**
+             * ajax 各个请求串联请求
+             * --下一次请求依赖于上一次请求，如果依赖性比较多嵌入会很多，维护起来会很复杂
+             */
+            const ajaxData = function() {
+                $.ajax({
+                    url: './mock/user1.json',
+                    dataType: 'json',
+                    success: (res) => {
+                        console.log(res)
+                        if(res.userName == "老王"){
+                            $.ajax({
+                                url: './mock/user1Info.json',
+                                success: (res2) => {
+                                    console.log(res2)
+                                }
+                            })
+                        }
+                    }
+                })
+            }
+//            ajaxData();
+
+            /**
+             * promise 各个请求串联请求
+             * --缺点，下一个请求依赖于上一个请求也是会嵌套，维护起来会很复杂
+             */
+            const promiseData = function() {
+                const p1 = new Promise(function(resolve, reject) {
+                    $.ajax({
+                        url: './mock/user1.json',
+                        success(res) {
+                            resolve(res);
+                        },
+                        error(err) {
+                            reject(err);
+                        }
+                    })
+                })
+
+                p1.then(function(res) {
+                    if(res.userName == "老王"){
+                        const p2 = new Promise(function(resolve, reject) {
+                            $.ajax({
+                                url: './mock/user1Info.json',
+                                success(res) {
+                                    resolve(res);
+                                },
+                                error(err) {
+                                    reject(err);
+                                }
+                            })
+                        }).then((res) => {
+                            console.log(res)
+                        })
+                    }
+                })
+            }
+
+            promiseData()
+        })
+    </script>
+</head>
+<body>
+
+</body>
+</html>

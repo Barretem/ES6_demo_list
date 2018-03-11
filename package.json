@@ -1,0 +1,27 @@
+{
+  "name": "es6_demo_list",
+  "version": "1.0.0",
+  "description": "This project mainly for ES6",
+  "main": "./src/index.js",
+  "scripts": {
+    "start": "webpack-dev-server --progress  --watch --mode development",
+    "build": "export NODE_ENV=test &&  webpack --mode development",
+    "pro-build": "export NODE_ENV=production &&  webpack --mode production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Barretem/ES6_demo_list.git"
+  },
+  "author": "barret",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Barretem/ES6_demo_list/issues"
+  },
+  "homepage": "https://github.com/Barretem/ES6_demo_list#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "webpack": "^4.1.1",
+    "webpack-cli": "^2.0.11",
+    "webpack-dev-server": "^3.1.1"
+  }
+}
