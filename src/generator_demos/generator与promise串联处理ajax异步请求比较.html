@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>generator与promise串联处理ajax异步请求比较</title>
+    <script src="./lib/jquery.js"></script>
+    <script src="./lib/runner.js"></script>
+    <script>
+        $(function() {
+
+/**
+ * promise 各个请求串联请求
+ * --缺点，下一个请求依赖于上一个请求也是会嵌套，维护起来会很复杂
+ */
+const promiseData = function() {
+    const p1 = new Promise(function(resolve, reject) {
+        $.ajax({
+            url: './mock/user1.json',
+            success(res) {
+                resolve(res);
+            },
+            error(err) {
+                reject(err);
+            }
+        })
+    })
+
+    const p2 = function (input) {
+        return new Promise(function(resolve, reject) {
+            $.ajax({
+                url: './mock/user1Info.json',
+                success(res) {
+                    resolve({
+                        ...res,
+                        ...input
+                    });
+                },
+                error(err) {
+                    reject(err);
+                }
+            })
+        })
+    }
+
+    p1.then(p2)
+        .then((res) => {
+            console.log(res)
+        })
+}
+
+//            promiseData()
+
+/**
+ * generator 各个请求并联请求
+ * --相比promise写法更加简便
+ */
+runner(function *(){
+    let data1=yield $.ajax({url: './mock/user1.json', dataType: 'json'});
+
+    if(data1.userName == '老王') {
+        let userInfo = yield $.ajax({url: './mock/user1.json', dataType: 'json'});
+        console.log(userInfo);
+    }
+});
+        })
+    </script>
+</head>
+<body>
+
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>generator与promise并联处理ajax异步请求比较</title>
+    <script src="./lib/jquery.js"></script>
+    <script src="./lib/runner.js"></script>
+    <script>
+        $(function() {
+
+            /**
+             * promise 各个请求并联请求
+             * --相比于ajax，更加便于数据进行统一处理
+             */
+            const promistData = function() {
+                const p1 = new Promise(function(resolve, reject) {
+                    $.ajax({
+                        url: './mock/user1.json',
+                        dataType: 'json',
+                        success(res) {
+                            resolve(res);
+                        },
+                        error(err) {
+                            reject(err)
+                        }
+                    })
+                });
+
+                const p2 = new Promise(function (resolve, reject) {
+                    $.ajax({
+                        url: './mock/user2.json',
+                        success(res) {
+                            resolve(res)
+                        },
+                        error(err){
+                            reject(err);
+                        }
+                    })
+                })
+
+                Promise.all([p1, p2]).then(function (arr) {
+                    console.log(arr)
+                }, function (errArr) {
+                    console.error(errArr)
+                })
+            }
+//            promistData();
+
+            /**
+             * generator 各个请求并联请求
+             * --相比promise写法更加简便
+             */
+            runner(function *(){
+                let data1=yield $.ajax({url: './mock/user1.json', dataType: 'json'});
+                let data2=yield $.ajax({url: './mock/user2.json', dataType: 'json'});
+
+                console.log(data1);
+                console.log(data2)
+            });
+        })
+    </script>
+</head>
+<body>
+
+</body>
+</html>

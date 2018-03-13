@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>yield可以返回，相当于return</title>
+    <script>
+        $(function() {
+            function* show() {
+                const a = yield 99;
+                yield a;
+                return 66;
+            }
+
+            const genObj = show();
+
+            const a1 = genObj.next(12);
+            console.log(a1); //输出{value: 99, done: false}
+
+            const a2 = genObj.next(55);
+            console.log(a2); //输出{value: 55, done: false}
+
+            const a3 = genObj.next(99);
+            console.log(a3); //输出{value: 66, done: true}
+        })
+    </script>
+</head>
+<body>
+
+</body>
+</html>
